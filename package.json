@@ -1,0 +1,20 @@
+{
+  "name": "native-promise-polyfill",
+  "version": "0.0.1",
+  "description": "A polyfill for browser-native Promises",
+  "main": "native-promise-polyfill.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "promises",
+    "promises-aplus",
+    "ecmascript"
+  ],
+  "author": "Chris Joel <chris@scriptolo.gy>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~1.17.0",
+    "promises-aplus-tests": "~2.0.3"
+  }
+}
