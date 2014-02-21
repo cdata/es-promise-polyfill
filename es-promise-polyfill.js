@@ -249,12 +249,53 @@
       return promise;
     };
 
-    Promise.all = function () {
-
+    Promise.prototype.catch = function (onRejected) {
+      return this.then(undefined, onRejected);
     };
 
-    Promise.cast = function () {
+    Promise.all = function (iterable) {
+      var count = 0;
+      var result = [];
+      var rejected = false;
+      var length;
+      var index;
 
+      if (!iterable ||
+          !iterable.hasOwnProperty('length') ||
+          iterable.propertyIsEnumerable('length')) {
+        return Promise.resolve(result);
+      }
+
+      length = iterable.length;
+
+      return new Promise(function (resolveAll, rejectAll) {
+        for (index = 0; index < length; ++index) {
+          (function (value, index) {
+            Promise.cast(value).then(function (resolvedValue) {
+              if (rejected) {
+                return;
+              }
+
+              result[index] = resolvedValue;
+
+              if (++count === length) {
+                resolveAll(result);
+              }
+            }).catch(function (rejectedValue) {
+              rejected = true;
+              rejectAll(rejectedValue);
+            });
+          })(iterable[index], index);
+        }
+      });
+    };
+
+    Promise.cast = function (value) {
+      if (value && typeof value === 'object' && value.constructor === this) {
+        return value;
+      }
+
+      return Promise.resolve(value);
     };
 
     Promise.resolve = function (value) {
@@ -270,7 +311,27 @@
     };
 
     Promise.race = function () {
+      var count = 0;
+      var length;
+      var index;
 
+      if (!iterable ||
+          !iterable.hasOwnProperty('length') ||
+          iterable.propertyIsEnumerable('length')) {
+        return Promise.resolve(result);
+      }
+
+      length = iterable.length;
+
+      return new Promise(function (resolve, reject) {
+        for (index = 0; index < length; ++index) {
+          Promise.cast(iterable[index]).then(function (value) {
+            resolve(value);
+          }).catch(function (error) {
+            reject(error);
+          });
+        }
+      });
     };
 
     return Promise;

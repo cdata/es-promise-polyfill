@@ -1,6 +1,6 @@
 // Adapted from https://github.com/domenic/promises-unwrapping/blob/master/reference-implementation/lib/aplus-adapter.js
 
-var Promise = require('../native-promise-polyfill');
+var Promise = require('../es-promise-polyfill');
 
 exports.deferred = function () {
   var resolvePromise, rejectPromise;
