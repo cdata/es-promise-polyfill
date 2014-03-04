@@ -249,7 +249,7 @@
       return promise;
     };
 
-    Promise.prototype.catch = function (onRejected) {
+    Promise.prototype['catch'] = function (onRejected) {
       return this.then(undefined, onRejected);
     };
 
@@ -281,7 +281,7 @@
               if (++count === length) {
                 resolveAll(result);
               }
-            }).catch(function (rejectedValue) {
+            })['catch'](function (rejectedValue) {
               rejected = true;
               rejectAll(rejectedValue);
             });
@@ -327,7 +327,7 @@
         for (index = 0; index < length; ++index) {
           Promise.cast(iterable[index]).then(function (value) {
             resolve(value);
-          }).catch(function (error) {
+          })['catch'](function (error) {
             reject(error);
           });
         }
