@@ -82,6 +82,21 @@ describe('Promise', function () {
       });
 
       describe('with an iterable argument', function () {
+        describe('that is empty', function () {
+          it('eventually resolves with an empty array', function (done) {
+            var iterable = [];
+            var promise = Promise.all(iterable);
+
+            promise.then(function (values) {
+              try {
+                assert.equal(values.length, 0);
+                done();
+              } catch (e) {
+                done(e);
+              }
+            });
+          });
+        });
         describe('yielding non-promise values', function () {
           describe('the returned promise', function () {
             it('resolves with an array of those values', function (done) {

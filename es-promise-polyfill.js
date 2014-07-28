@@ -19,6 +19,12 @@
       return !!(obj instanceof Promise);
     };
 
+    var isIterable = function (obj) {
+      return !!obj && // Truthy
+          obj.hasOwnProperty('length') && // Has own length property
+          !obj.propertyIsEnumerable('length'); // Length not enumerable
+    };
+
     var isThenable = function (obj) {
       var type;
 
@@ -260,13 +266,15 @@
       var length;
       var index;
 
-      if (!iterable ||
-          !iterable.hasOwnProperty('length') ||
-          iterable.propertyIsEnumerable('length')) {
+      if (!isIterable(iterable)) {
         return Promise.resolve(result);
       }
 
       length = iterable.length;
+
+      if (length === 0) {
+        return Promise.resolve(result);
+      }
 
       return new Promise(function (resolveAll, rejectAll) {
         for (index = 0; index < length; ++index) {
@@ -310,15 +318,13 @@
       });
     };
 
-    Promise.race = function () {
+    Promise.race = function (iterable) {
       var count = 0;
       var length;
       var index;
 
-      if (!iterable ||
-          !iterable.hasOwnProperty('length') ||
-          iterable.propertyIsEnumerable('length')) {
-        return Promise.resolve(result);
+      if (!isIterable(iterable)) {
+        return Promise.resolve();
       }
 
       length = iterable.length;
